@@ -7,15 +7,16 @@ class Simulator(object):
     def __init__(self, width, height, n, r):
         self.width = width
         self.height = height
-        self.canvas_height = height + 100
-        self.canvas_width = width + 100
+        self.canvas_height = height
+        self.canvas_width = width
         self.radius = r
         self.molecules = self.generate_molecules(n)
         self.setup_window()
         self.setup_timer()
-        self.h = 0.01
+        self.h = 0.1
 
     def do_movement(self):
+        self.calc_energy()
         self.calc_forces()
         self.move_molecules()
         self.draw_molecules()
@@ -34,10 +35,11 @@ class Simulator(object):
         self.canvas.pack()
 
     def generate_molecules(self, n):
-        return [
-                Molecule(10,10,0,0),
-                Molecule(20, 10, 0, 0)
-                ]
+        # return [
+        #         Molecule(10, 10,0,0),
+        #         Molecule(20, 10, 0, 0),
+        #         Molecule(15, 20, 0, 0)
+        #         ]
         return Molecule.random_molecules(
                 n,
                 self.width,
@@ -54,6 +56,14 @@ class Simulator(object):
             m.ax = m.force[0]
             m.ay = m.force[1]
 
+    def calc_energy(self):
+        potential = 0
+        ke = 0
+        for m in self.molecules:
+            potential += -10*m.y
+            ke += 0.5 * (m.vx**2 + m.vy**2)
+        print "TOT: %s, PE: %s, KE: %s" % (potential + ke, potential, ke)
+
     def move_molecules(self):
         for m in self.molecules:
             new_r = Verlet.new_r(m, self.h)
@@ -61,26 +71,17 @@ class Simulator(object):
             m.x, m.y = new_r
             m.vx, m.vy = new_v
 
-            if m.x > self.width:
-                m.x = self.width
+            if m.x >= self.width:
                 m.vx = - m.vx
-                m.ax = 0
-            if m.x < 0:
-                m.x = 0
+            if m.x <= self.radius*2:
                 m.vx = - m.vx
-                m.ax = 0
-            if m.y > self.height:
-                m.y = self.height
+            if m.y >= (self.height - self.radius*2):
                 m.vy = - m.vy
-                m.ay = 0
-            if m.y < 0:
-                m.y = 0
+            if m.y <= self.radius*2:
                 m.vy = - m.vy
-                m.ay = 0
 
     def draw_molecules(self):
         self.canvas.delete(ALL)
-        self.canvas.create_rectangle(0, 0, self.width, self.height)
         for molecule in self.molecules:
             self.canvas.create_oval(
                     molecule.x - self.radius,
@@ -91,6 +92,6 @@ class Simulator(object):
                     )
 
 if __name__ == '__main__':
-    sim = Simulator(500, 500, 2, 2)
+    sim = Simulator(500, 500, 100, 0.5)
     # print sim.molecules
     mainloop()
