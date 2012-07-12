@@ -1,12 +1,14 @@
+from vector import Vector as V
+
 class Verlet(object):
     @classmethod
     def new_r(self, m, h):
-        return (m.x + h*m.vx + ((h**2)/2)*m.ax,
-                m.y + h*m.vy + ((h**2)/2)*m.ay)
+        return V(m.r.x + h*m.v.x + ((h**2)/2)*m.a.x,
+                m.r.y + h*m.v.y + ((h**2)/2)*m.a.y)
     @classmethod
     def new_v(self, m, h, oldv, olda):
-        return (oldv[0] + (h/2)*(m.ax + olda[0]),
-                oldv[1] + (h/2)*(m.ay + olda[1]))
+        return V(oldv.x + (h/2)*(m.a.x + olda.x),
+                oldv.y + (h/2)*(m.a.y + olda.y))
 
 
 
