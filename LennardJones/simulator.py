@@ -12,7 +12,7 @@ class Simulator(object):
         self.canvas_width = width
         self.radius = r
         self.h = 1.0/300
-        self.scale = 1.0/100
+        self.scale = 1.0/50
 
         self.molecules = self.generate_molecules(n)
         self.setup_window()
@@ -23,6 +23,7 @@ class Simulator(object):
         self.calc_energy()
         self.move_molecules()
         self.draw_molecules()
+        self.draw_scale()
         self.setup_timer()
 
     def setup_timer(self):
@@ -82,6 +83,13 @@ class Simulator(object):
             #     m.v.x = - m.v.x
             # if m.r.y >= self.height or m.r.y <= 0:
             #     m.v.y = - m.v.y
+
+    def draw_scale(self):
+        self.canvas.create_rectangle(
+                10,
+                490,
+                10 + 1/self.scale,
+                495)
 
     def draw_molecules(self):
         self.canvas.delete(ALL)
