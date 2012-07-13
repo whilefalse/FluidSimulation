@@ -11,8 +11,9 @@ class Simulator(object):
         self.canvas_height = height
         self.canvas_width = width
         self.radius = r
-        self.h = 1.0/300
+        self.h = 0.001
         self.scale = 1.0/50
+        self.max_x = 0
 
         self.molecules = self.generate_molecules(n)
         self.setup_window()
@@ -42,7 +43,7 @@ class Simulator(object):
         return [Molecule(V(2, 2), V(0, 0)),
                 # Molecule(V(500*self.scale, 0*self.scale), V(0,0)),
                 # Molecule(V(0*self.scale, 500*self.scale), V(0,0)),
-                Molecule(V(3, 3), V(0,0))]
+                Molecule(V(4, 2), V(0,0))]
 
         return Molecule.random_molecules(
                 n,
@@ -52,6 +53,10 @@ class Simulator(object):
                 )
 
     def calc_energy(self):
+        r = self.molecules[0].r.distance(self.molecules[1].r)
+        if r > self.max_x:
+            self.max_x = r
+        print "Max X: %s" % (self.max_x)
         pe = 0
         ke = 0
         for m in self.molecules:
@@ -61,7 +66,7 @@ class Simulator(object):
                     others.append(n)
             pe += Lennard.energy(m, others)
             ke += 0.5 * m.v.lensquared()
-        print "TOT: %s, PE: %s, KE: %s" % (pe+ke, pe, ke)
+        # print "TOT: %s, PE: %s, KE: %s" % (pe+ke, pe, ke)
 
     def calc_forces(self):
         for m in self.molecules:
