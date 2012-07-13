@@ -7,7 +7,9 @@ class Lennard(object):
         for other in others:
             r = this.r.distance(other.r)
 
-            utot += 4 * ((1/r)**(12) - (1/r)**(6))
+            u = 4 * ((1/r)**(12) - (1/r)**(6))
+            utot += u
+            assert u >= -1
         return utot
 
     @classmethod

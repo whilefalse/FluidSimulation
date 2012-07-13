@@ -12,7 +12,7 @@ class Simulator(object):
         self.canvas_width = width
         self.radius = r
         self.h = 1.0/1000
-        self.scale = 1.0/200
+        self.scale = 1.0/500
 
         self.molecules = self.generate_molecules(n)
         self.setup_window()
@@ -39,8 +39,8 @@ class Simulator(object):
 
     def generate_molecules(self, n):
         return [Molecule(V(0*self.scale, 0*self.scale), V(0, 0)),
-                Molecule(V(500*self.scale, 0*self.scale), V(0,0)),
-                Molecule(V(0*self.scale, 500*self.scale), V(0,0)),
+                # Molecule(V(500*self.scale, 0*self.scale), V(0,0)),
+                # Molecule(V(0*self.scale, 500*self.scale), V(0,0)),
                 Molecule(V(500*self.scale, 500*self.scale), V(0,0))]
 
         return Molecule.random_molecules(
@@ -78,10 +78,10 @@ class Simulator(object):
             m.r = new_r
             m.v = new_v
 
-            if m.r.x >= self.width or m.r.x <= 0:
-                m.v.x = - m.v.x
-            if m.r.y >= self.height or m.r.y <= 0:
-                m.v.y = - m.v.y
+            # if m.r.x >= self.width or m.r.x <= 0:
+            #     m.v.x = - m.v.x
+            # if m.r.y >= self.height or m.r.y <= 0:
+            #     m.v.y = - m.v.y
 
     def draw_molecules(self):
         self.canvas.delete(ALL)
