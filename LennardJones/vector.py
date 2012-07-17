@@ -6,7 +6,7 @@ class Vector(object):
         self.y = y
 
     def __repr__(self):
-        "(%s, %s)" % (self.x, self.y)
+        return "(%s, %s)" % (self.x, self.y)
 
     def len(self):
         return math.sqrt(self.lensquared())
