@@ -41,13 +41,6 @@ class Verlet(object):
         pe = 0
         ke = 0
         for m in ms:
-            ke += (0.5)*(m.v.lensquared())
+            ke += m.kinetic_energy()
             pe += self.force_model.energy(m, self.others(m, ms))
         print "TOT ENERGY: %s, PE: %s, KE: %s" % (pe+ke, pe, ke)
-
-        r = ms[0].r.distance(ms[1].r)
-        if r > self.__class__.max_r:
-            self.__class__.max_r = r
-        # print "MAX R: %s" % self.__class__.max_r
-
-Verlet.max_r = 0

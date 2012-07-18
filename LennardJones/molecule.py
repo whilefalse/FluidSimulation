@@ -11,6 +11,9 @@ class Molecule(object):
     def __repr__(self):
         return 'Molecule: %s -> %s' % (self.r, self.v)
 
+    def kinetic_energy(self):
+        return 0.5*self.v.lensquared()
+
     @classmethod
     def random_molecule(klass, max_x, max_y):
         x = random.uniform(0, max_x)
@@ -22,7 +25,7 @@ class Molecule(object):
     @classmethod
     def random_molecules(klass, n, max_x, max_y):
         return [
-                klass(V(1,1), V(0,0)),
-                klass(V(1,1.1+2**(1.0/6)), V(0,0))
+                klass(V(0.1,0.1), V(1,1)),
+                klass(V(2.9,2.9), V(-1,-1))
                 ]
         return [klass.random_molecule(max_x, max_y) for i in range(n)]
