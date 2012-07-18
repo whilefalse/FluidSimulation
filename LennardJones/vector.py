@@ -2,8 +2,8 @@ import math
 
 class Vector(object):
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x = float(x)
+        self.y = float(y)
 
     def __repr__(self):
         return "(%s, %s)" % (self.x, self.y)
@@ -21,5 +21,3 @@ class Vector(object):
         dx = (self.x - other.x)
         dy = (self.y - other.y)
         return dx*dx + dy*dy
-
-

@@ -12,13 +12,17 @@ class Molecule(object):
         return 'Molecule: %s -> %s' % (self.r, self.v)
 
     @classmethod
-    def random_molecule(klass, max_x, max_y, scale):
-        x = random.randint(0, max_x) * scale
-        y = random.randint(0, max_y) * scale
-        vx = random.randint(0, max_x/4) * random.choice([-1,1]) * scale
-        vy = random.randint(0, max_y/4) * random.choice([-1,1]) * scale
+    def random_molecule(klass, max_x, max_y):
+        x = random.uniform(0, max_x)
+        y = random.uniform(0, max_y)
+        vx = random.uniform(0, max_x/4) * random.choice([-1,1])
+        vy = random.uniform(0, max_y/4) * random.choice([-1,1])
         return klass(V(x, y), V(vx, vy))
 
     @classmethod
-    def random_molecules(klass, n, max_x, max_y, scale):
-        return [klass.random_molecule(max_x, max_y, scale) for i in range(n)]
+    def random_molecules(klass, n, max_x, max_y):
+        return [
+                klass(V(1,1), V(0,0)),
+                klass(V(1,1.1+2**(1.0/6)), V(0,0))
+                ]
+        return [klass.random_molecule(max_x, max_y) for i in range(n)]
