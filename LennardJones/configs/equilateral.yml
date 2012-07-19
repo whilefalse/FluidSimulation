@@ -1,0 +1,23 @@
+simulation:
+    tick_time: 1
+    max_steps: 5000
+    dt: 0.01
+    force_model: lennard.Lennard
+
+box:
+    width: 10
+    height: 10
+
+canvas:
+    width: 500
+    height: 500
+    radius: 2
+
+molecules:
+    - r: [5,5]
+      v: [0,0]
+    - r: [6,5]
+      v: [0,0]
+      # 0.866 = sqrt(3)/2 so we have an equilateral triangle
+    - r: [5.5,5.8660254037844386467637231707529361834714026269051903]
+      v: [0,0]
