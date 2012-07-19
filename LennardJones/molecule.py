@@ -13,19 +13,3 @@ class Molecule(object):
 
     def kinetic_energy(self):
         return 0.5*self.v.lensquared()
-
-    @classmethod
-    def random_molecule(klass, max_x, max_y):
-        x = random.uniform(0, max_x)
-        y = random.uniform(0, max_y)
-        vx = random.uniform(0, max_x/4) * random.choice([-1,1])
-        vy = random.uniform(0, max_y/4) * random.choice([-1,1])
-        return klass(V(x, y), V(vx, vy))
-
-    @classmethod
-    def random_molecules(klass, n, max_x, max_y):
-        return [
-                klass(V(0.1,0.1), V(1,1)),
-                klass(V(2.9,2.9), V(-1,-1))
-                ]
-        return [klass.random_molecule(max_x, max_y) for i in range(n)]

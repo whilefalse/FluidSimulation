@@ -1,37 +1,34 @@
 import Tkinter as Tk
+from config import config
 
 class Canvas(object):
-    def __init__(self, width, height):
-        self.canvas_width = 500.0
-        self.canvas_height = 500.0
-        self.width = float(width)
-        self.height = float(height)
-        self.radius = 2
-        self.setup_window()
-
-    def setup_window(self):
+    def __init__(self):
         self.tk = Tk.Tk()
         self.canvas = Tk.Canvas(
                 self.tk,
-                width=self.canvas_width,
-                height=self.canvas_height,
+                width=config['canvas']['width'],
+                height=config['canvas']['height'],
                 )
         self.canvas.pack()
 
     def setup_timer(self, func):
-        self.tk.after(1, func)
+        self.tk.after(config['simulation']['tick_time'], func)
 
     def refresh(self, molecules):
         self.canvas.delete(Tk.ALL)
 
         for molecule in molecules:
-            self.canvas.create_oval(
-                    molecule.r.x / self.width * self.canvas_width - self.radius,
-                    molecule.r.y / self.height * self.canvas_height - self.radius,
-                    molecule.r.x / self.width * self.canvas_width + self.radius,
-                    molecule.r.y / self.height * self.canvas_height + self.radius,
-                    fill = 'black'
-                    )
+            self.canvas.create_oval(*self.canvas_oval(molecule), fill='black')
+
+    def canvas_oval(self, m):
+        r = config['canvas']['radius']
+        w = float(config['canvas']['width'] / config['box']['width'])
+        h = float(config['canvas']['height'] / config['box']['height'])
+
+        return [m.r.x * w - r,
+                m.r.y * h - r,
+                m.r.x * w + r,
+                m.r.y * h + r]
 
     def start(self):
         Tk.mainloop()

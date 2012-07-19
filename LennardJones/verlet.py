@@ -1,16 +1,18 @@
 from vector import Vector as V
+from config import config
+
+force_model = config['simulation']['force_model']
+module, klass = force_model.split('.')
+force_model = getattr(__import__(module), klass)()
+dt = config['simulation']['dt']
 
 class Verlet(object):
-    def __init__(self, force):
-        self.force_model = force
-        self.dt = 0.001
+    def __init__(self):
+        self.kes = []
+        self.pes = []
 
     def others(self, this, every):
-        others = []
-        for m in every:
-            if m != this:
-                others.append(m)
-        return others
+        return filter(lambda x: x != this, every)
 
     def process_molecules(self, ms):
         self.print_energy(ms)
@@ -27,20 +29,24 @@ class Verlet(object):
             self.update_velocity(m, old_as[i])
 
     def update_position(self, m):
-        m.r.x = m.r.x + m.v.x*self.dt + (0.5)*m.a.x*(self.dt**2)
-        m.r.y = m.r.y + m.v.y*self.dt + (0.5)*m.a.y*(self.dt**2)
+        m.r.x = m.r.x + m.v.x*dt + (0.5)*m.a.x*(dt**2)
+        m.r.y = m.r.y + m.v.y*dt + (0.5)*m.a.y*(dt**2)
 
     def update_acceleration(self, m, others):
-        m.a = self.force_model.force(m, others)
+        m.a = force_model.force(m, others)
 
     def update_velocity(self, m, original_a):
-        m.v.x = m.v.x + (0.5)*(original_a.x + m.a.x)*self.dt
-        m.v.y = m.v.y + (0.5)*(original_a.y + m.a.y)*self.dt
+        m.v.x = m.v.x + (0.5)*(original_a.x + m.a.x)*dt
+        m.v.y = m.v.y + (0.5)*(original_a.y + m.a.y)*dt
 
     def print_energy(self, ms):
         pe = 0
         ke = 0
         for m in ms:
             ke += m.kinetic_energy()
-            pe += self.force_model.energy(m, self.others(m, ms))
-        print "TOT ENERGY: %s, PE: %s, KE: %s" % (pe+ke, pe, ke)
+            # Each pair gets counted twice, but we only care about the
+            # mutual potential energy between each pair, so divide by 2
+            pe += force_model.energy(m, self.others(m, ms))/2
+
+        self.kes.append(ke)
+        self.pes.append(pe)

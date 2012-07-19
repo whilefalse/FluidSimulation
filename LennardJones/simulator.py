@@ -1,29 +1,32 @@
-from molecule import Molecule
-from lennard import Lennard
 from verlet import Verlet
-from vector import Vector as V
 from canvas import Canvas
+from config import config
+from molecule_generator import MoleculeGenerator
+from plotter import Plotter
+
+max_steps = config['simulation']['max_steps']
 
 class Simulator(object):
     def __init__(self):
-        self.width = 3
-        self.height = 3
-
-        self.molecules = Molecule.random_molecules(100, self.width, self.height)
-
-        self.canvas = Canvas(self.width, self.height)
+        self.current_step = 0
+        self.molecules = MoleculeGenerator.generate()
+        self.canvas = Canvas()
         self.canvas.setup_timer(self.do_movement)
+        self.verlet = Verlet()
 
     def do_movement(self):
+        self.current_step += 1
         self.move_molecules()
         self.canvas.refresh(self.molecules)
 
         # Set the timer to go again
-        self.canvas.setup_timer(self.do_movement)
+        if self.current_step < max_steps:
+            self.canvas.setup_timer(self.do_movement)
+        else:
+            Plotter().plot(self.verlet.pes, self.verlet.kes)
 
     def move_molecules(self):
-        verlet = Verlet(force=Lennard())
-        verlet.process_molecules(self.molecules)
+        self.verlet.process_molecules(self.molecules)
 
 if __name__ == '__main__':
     sim = Simulator()
