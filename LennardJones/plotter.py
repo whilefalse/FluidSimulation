@@ -9,7 +9,7 @@ class Plotter(object):
 
         l1, = ax.plot(ts, pes, 'b--')
         l2, = ax.plot(ts, kes, 'g--')
-        l3, = ax.plot(ts, tots, 'r--')
+        l3, = ax.plot(ts, tots, 'r-')
 
         ax.set_ylabel(r'Energy / reduced units')
         ax.set_xlabel(r'Time / steps')
