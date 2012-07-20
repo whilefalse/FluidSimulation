@@ -11,9 +11,6 @@ class Verlet(object):
         self.kes = []
         self.pes = []
 
-    def others(self, this, every):
-        return filter(lambda x: x != this, every)
-
     def process_molecules(self, ms):
         self.print_energy(ms)
 
@@ -23,7 +20,7 @@ class Verlet(object):
         old_as = []
         for m in ms:
             old_as.append(m.a)
-            self.update_acceleration(m, self.others(m, ms))
+            self.update_acceleration(m, ms)
 
         for i, m in enumerate(ms):
             self.update_velocity(m, old_as[i])
@@ -39,6 +36,16 @@ class Verlet(object):
         m.v.x = m.v.x + (0.5)*(original_a.x + m.a.x)*dt
         m.v.y = m.v.y + (0.5)*(original_a.y + m.a.y)*dt
 
+        if config['simulation']['boundary'] == 'wall':
+            if m.r.x <= 0 and m.v.x <=0:
+                m.v.x = - m.v.x
+            if m.r.y <= 0 and m.v.y <=0:
+                m.v.y = - m.v.y
+            if m.r.x >= config['box']['width'] and m.v.x >= 0:
+                m.v.x = - m.v.x
+            if m.r.y >= config['box']['height'] and m.v.y >= 0:
+                m.v.y = - m.v.y
+
     def print_energy(self, ms):
         pe = 0
         ke = 0
@@ -46,7 +53,7 @@ class Verlet(object):
             ke += m.kinetic_energy()
             # Each pair gets counted twice, but we only care about the
             # mutual potential energy between each pair, so divide by 2
-            pe += force_model.energy(m, self.others(m, ms))/2
+            pe += force_model.energy(m, ms)/2
 
         self.kes.append(ke)
         self.pes.append(pe)

@@ -3,6 +3,7 @@ simulation:
     max_steps: 5000
     dt: 0.01
     force_model: lennard.Lennard
+    boundary: wall
 
 box:
     width: 10

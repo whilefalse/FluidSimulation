@@ -14,12 +14,8 @@ canvas:
     height: 500
     radius: 2
 
-molecules:
-    - r: [4,4]
-      v: [0,0]
-    - r: [6,6]
-      v: [0,0]
-    - r: [4,6]
-      v: [0,0]
-    - r: [6,4]
-      v: [0,0]
+molecules: grid
+molecules_args:
+    x_num: 5
+    y_num: 5
+    y_scale: 0.5
