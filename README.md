@@ -9,6 +9,6 @@ To run:
 
 e.g
 
-```python simulator.py square``
+```python simulator.py square```
 
 See the configs/ directory for all configs.
